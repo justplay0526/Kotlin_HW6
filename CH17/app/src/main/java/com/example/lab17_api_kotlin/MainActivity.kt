@@ -42,17 +42,17 @@ class MainActivity : AppCompatActivity() {
         OkHttpClient().newCall(req).enqueue(object : Callback {
 
             override fun onResponse(call: Call, response: Response) {
-                //使用 response.body?.string()取得 JSON 字串
+
                 val json = response.body?.string()
-                //建立 Gson 並使用其 fromJson()方法，將 JSON 字串以 MyObject 格式輸出
+
                 val myObject = Gson().fromJson(json, MyObject::class.java)
-                //顯示結果
+
                 showDialog(myObject)
             }
-            //發送失敗執行此方法
+
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
-                    //開啟按鈕可再次查詢
+
                     btn_query.isEnabled = true
                     Toast.makeText(this@MainActivity,
                         "查詢失敗$e", Toast.LENGTH_SHORT).show()
@@ -60,19 +60,19 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-    //顯示結果
+
     private fun showDialog(myObject: MyObject) {
-        //建立一個字串陣列，用於存放 SiteName 與 Status 資訊
+
         val items = arrayOfNulls<String>(myObject.records.size)
-        //將 API 資料取出並建立字串，並存放到字串陣列
+
         myObject.records.forEachIndexed { index, data ->
             items[index] = "地區：${data.sitename}, 狀態：${data.status}"
         }
-        //切換到主執行緒將畫面更新
+
         runOnUiThread {
-            //開啟按鈕可再次查詢
+
             btn_query.isEnabled = true
-            //建立 AlertDialog 物件並顯示字串陣列
+            
             AlertDialog.Builder(this)
                 .setTitle("雙北空氣品質")
                 .setItems(items, null)
